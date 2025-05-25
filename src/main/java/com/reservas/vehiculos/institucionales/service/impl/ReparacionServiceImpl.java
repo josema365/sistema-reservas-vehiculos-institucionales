@@ -4,31 +4,46 @@ import com.reservas.vehiculos.institucionales.dto.ReparacionDTO;
 import com.reservas.vehiculos.institucionales.model.Reparacion;
 import com.reservas.vehiculos.institucionales.model.Vehiculo;
 import com.reservas.vehiculos.institucionales.repository.ReparacionRepository;
+import com.reservas.vehiculos.institucionales.repository.VehiculoRepository;
 import com.reservas.vehiculos.institucionales.service.ReparacionService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ReparacionServiceImpl implements ReparacionService {
 
     private final ReparacionRepository repository;
+    private final VehiculoRepository vehiculoRepository;
 
-    public ReparacionServiceImpl(ReparacionRepository repository) {
+    public ReparacionServiceImpl(ReparacionRepository repository, VehiculoRepository vehiculoRepository) {
         this.repository = repository;
+        this.vehiculoRepository = vehiculoRepository;
     }
 
-   @Override
-public Reparacion crearReparacion(ReparacionDTO dto) {
-    Reparacion r = new Reparacion();
-    Vehiculo vehiculo = new Vehiculo();
-    vehiculo.setId(dto.getIdAuto());
-    r.setVehiculo(vehiculo);
-    r.setCosto(dto.getCosto());
-    r.setDescripcion(dto.getDescripcion());
-    r.setDocFactura(dto.getDocFactura());
-    return repository.save(r);
-}
+    @Override
+    @Transactional
+    public Reparacion crearReparacion(ReparacionDTO dto) {
+        Reparacion r = new Reparacion();
+
+        Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findById(dto.getIdAuto());
+
+        if (optionalVehiculo.isEmpty()) {
+            throw new IllegalArgumentException("Vehiculo con ID " + dto.getIdAuto() + " no encontrado para la reparación.");
+        }
+        Vehiculo vehiculoExistente = optionalVehiculo.get();
+
+        r.setVehiculo(vehiculoExistente);
+        r.setCosto(dto.getCosto());
+        r.setDescripcion(dto.getDescripcion());
+        r.setDocFactura(dto.getDocFactura());
+        r.setFechaReparacion(LocalDateTime.now());
+
+        return repository.save(r);
+    }
 
     @Override
     public List<Reparacion> listarReparacionesPorAuto(Long idAuto) {
