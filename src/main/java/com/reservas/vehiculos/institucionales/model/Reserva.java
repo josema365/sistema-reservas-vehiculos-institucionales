@@ -22,7 +22,7 @@ public class Reserva {
 
     private LocalDateTime fecha_inicio;
 
-    private LocalDateTime feche_fin;
+    private LocalDateTime fecha_fin;
 
     private LocalDateTime fecha_reserva;
 
