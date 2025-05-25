@@ -1,11 +1,10 @@
 package com.reservas.vehiculos.institucionales.model;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
 
 @Getter
 @Setter
@@ -18,21 +17,15 @@ public class Reparacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private float costo;
+    private BigDecimal costo;
 
     private String descripcion;
 
-    private String doc_factura;
+    private String docFactura;
 
-    private LocalDateTime fecha_reparacion;
-
-
+    private LocalDateTime fechaReparacion;
 
     @ManyToOne
-    @JoinColumn(name = "vehiculo_id")
+    @JoinColumn(name = "id_auto")
     private Vehiculo vehiculo;
-
-
-
-
 }
