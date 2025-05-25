@@ -2,7 +2,6 @@ package com.reservas.vehiculos.institucionales.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.aop.target.LazyInitTargetSource;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -23,31 +22,35 @@ public class Usuario {
 
     private String nombre;
 
-    private String apellido_paterno;
+    @Column(name = "apellido_paterno")
+    private String apellidoPaterno;
 
-    private String apellido_materno;
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
 
-    private LocalDate fecha_nacimiento;
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fechaNacimiento;
 
     private String email;
 
-    private String cargo_publico;
+    @Column(name = "cargo_publico")
+    private String cargoPublico;
 
     private String usuario;
 
     private String password;
 
-    private LocalDateTime fecha_registro;
+    @Column(name = "fecha_registro")
+    private LocalDateTime fechaRegistro;
 
     @OneToMany(mappedBy = "usuario")
     private List<Reserva> reservas;
 
-
-    @ManyToMany(fetch = FetchType.EAGER) // Carga los roles de forma anticipada (EAGER) para evitar problemas de LazyInitializationException
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
-            name = "usuario_roles", // Nombre de la tabla intermedia
-            joinColumns = @JoinColumn(name = "usuario_id"), // Columna que referencia al usuario
-            inverseJoinColumns = @JoinColumn(name = "rol_id") // Columna que referencia al rol
+            name = "usuario_roles",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "rol_id")
     )
     private Set<Rol> roles = new HashSet<>();
 }

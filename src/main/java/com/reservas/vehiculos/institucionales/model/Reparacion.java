@@ -21,7 +21,11 @@ public class Reparacion {
 
     private String descripcion;
 
+
+    @Column(name = "doc_factura")
     private String docFactura;
+
+    @Column(name = "fecha_reparacion")
 
     private LocalDateTime fechaReparacion;
 
