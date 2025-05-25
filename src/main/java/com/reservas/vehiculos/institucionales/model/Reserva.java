@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,11 +19,15 @@ public class Reserva {
 
     private String descripcion;
 
-    private LocalDateTime fecha_inicio;
 
-    private LocalDateTime fecha_fin;
+    @Column(name = "fecha_inicio")
+    private LocalDateTime fechaInicio;
 
-    private LocalDateTime fecha_reserva;
+    @Column(name = "fecha_fin")
+    private LocalDateTime fechaFin;
+
+    @Column(name = "fecha_reserva")
+    private LocalDateTime fechaReserva;
 
     @ManyToMany
     @JoinTable(
@@ -33,8 +36,6 @@ public class Reserva {
             inverseJoinColumns = @JoinColumn(name = "vehiculo_id")
     )
     private List<Vehiculo> vehiculos;
-
-
 
     @ManyToOne
     @JoinColumn(name = "usuario_id")

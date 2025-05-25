@@ -61,14 +61,14 @@ public class ReservaController {
 
     @PostMapping
     public ResponseEntity<?> createReserva(@Valid @RequestBody ReservaDTO reservaDTO, BindingResult result) {
-        // Aplicar validación personalizada
+
         reservaValidation.validate(reservaDTO, result);
         
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(formatErrors(result));
         }
         
-        // Verificar disponibilidad de vehículos
+
         if (!reservaService.areAllVehiculosAvailable(
                 reservaDTO.getVehiculoIds(), 
                 reservaDTO.getFechaInicio(), 
@@ -88,24 +88,24 @@ public class ReservaController {
             @Valid @RequestBody ReservaDTO reservaDTO,
             BindingResult result) {
         
-        // Verificar si existe la reserva
+
         Optional<ReservaDTO> existingReserva = reservaService.findById(id);
         if (existingReserva.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         
-        // Aplicar validación personalizada
+
         reservaValidation.validate(reservaDTO, result);
         
         if (result.hasErrors()) {
             return ResponseEntity.badRequest().body(formatErrors(result));
         }
         
-        // Verificar disponibilidad de vehículos (solo para vehículos diferentes a los que ya estaban en la reserva)
+
         List<Long> existingVehiculoIds = existingReserva.get().getVehiculoIds();
         List<Long> newVehiculoIds = reservaDTO.getVehiculoIds();
         
-        // Filtrar solo los nuevos vehículos para verificar disponibilidad
+
         List<Long> vehiculosToCheck = newVehiculoIds.stream()
                 .filter(vehiculoId -> !existingVehiculoIds.contains(vehiculoId))
                 .toList();

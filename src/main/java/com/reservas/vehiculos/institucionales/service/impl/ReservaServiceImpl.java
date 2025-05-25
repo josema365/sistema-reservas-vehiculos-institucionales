@@ -76,8 +76,7 @@ public class ReservaServiceImpl implements ReservaService {
     @Transactional
     public ReservaDTO save(ReservaDTO reservaDTO) {
         Reserva reserva = convertToEntity(reservaDTO);
-        // Establecer la fecha de reserva al momento actual
-        reserva.setFecha_reserva(LocalDateTime.now());
+        reserva.setFechaReserva(LocalDateTime.now());
         reserva = reservaRepository.save(reserva);
         return convertToDTO(reserva);
     }
@@ -88,29 +87,31 @@ public class ReservaServiceImpl implements ReservaService {
         Optional<Reserva> reservaOptional = reservaRepository.findById(id);
         if (reservaOptional.isPresent()) {
             Reserva reserva = reservaOptional.get();
-            // Mantener la fecha de creación original
-            LocalDateTime fechaReservaOriginal = reserva.getFecha_reserva();
-            
-            // Actualizar la entidad con los nuevos datos
+
+            LocalDateTime fechaReservaOriginal = reserva.getFechaReserva();
+
+
             reserva.setDescripcion(reservaDTO.getDescripcion());
-            reserva.setFecha_inicio(reservaDTO.getFechaInicio());
-            reserva.setFecha_fin(reservaDTO.getFechaFin());
-            
-            // Actualizar usuario si es necesario
+
+            reserva.setFechaInicio(reservaDTO.getFechaInicio());
+
+            reserva.setFechaFin(reservaDTO.getFechaFin());
+
+
             if (reservaDTO.getUsuarioId() != null) {
                 usuarioRepository.findById(reservaDTO.getUsuarioId())
                         .ifPresent(reserva::setUsuario);
             }
-            
-            // Actualizar vehículos
+
+
             if (reservaDTO.getVehiculoIds() != null && !reservaDTO.getVehiculoIds().isEmpty()) {
                 List<Vehiculo> vehiculos = vehiculoRepository.findAllById(reservaDTO.getVehiculoIds());
                 reserva.setVehiculos(vehiculos);
             }
-            
-            // Restaurar la fecha de reserva original
-            reserva.setFecha_reserva(fechaReservaOriginal);
-            
+
+
+            reserva.setFechaReserva(fechaReservaOriginal);
+
             reserva = reservaRepository.save(reserva);
             return convertToDTO(reserva);
         }
@@ -142,13 +143,16 @@ public class ReservaServiceImpl implements ReservaService {
         List<Long> vehiculoIds = reserva.getVehiculos().stream()
                 .map(Vehiculo::getId)
                 .collect(Collectors.toList());
-                
+
         return ReservaDTO.builder()
                 .id(reserva.getId())
                 .descripcion(reserva.getDescripcion())
-                .fechaInicio(reserva.getFecha_inicio())
-                .fechaFin(reserva.getFecha_fin())
-                .fechaReserva(reserva.getFecha_reserva())
+
+                .fechaInicio(reserva.getFechaInicio())
+
+                .fechaFin(reserva.getFechaFin())
+
+                .fechaReserva(reserva.getFechaReserva())
                 .usuarioId(reserva.getUsuario() != null ? reserva.getUsuario().getId() : null)
                 .vehiculoIds(vehiculoIds)
                 .build();
@@ -158,24 +162,27 @@ public class ReservaServiceImpl implements ReservaService {
         Reserva reserva = new Reserva();
         reserva.setId(reservaDTO.getId());
         reserva.setDescripcion(reservaDTO.getDescripcion());
-        reserva.setFecha_inicio(reservaDTO.getFechaInicio());
-        reserva.setFecha_fin(reservaDTO.getFechaFin());
-        reserva.setFecha_reserva(reservaDTO.getFechaReserva());
-        
-        // Establecer usuario
+
+        reserva.setFechaInicio(reservaDTO.getFechaInicio());
+
+        reserva.setFechaFin(reservaDTO.getFechaFin());
+
+        reserva.setFechaReserva(reservaDTO.getFechaReserva());
+
+
         if (reservaDTO.getUsuarioId() != null) {
             usuarioRepository.findById(reservaDTO.getUsuarioId())
                     .ifPresent(reserva::setUsuario);
         }
-        
-        // Establecer vehículos
+
+
         if (reservaDTO.getVehiculoIds() != null && !reservaDTO.getVehiculoIds().isEmpty()) {
             List<Vehiculo> vehiculos = vehiculoRepository.findAllById(reservaDTO.getVehiculoIds());
             reserva.setVehiculos(vehiculos);
         } else {
             reserva.setVehiculos(new ArrayList<>());
         }
-        
+
         return reserva;
     }
-} 
+}
