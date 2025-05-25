@@ -1,7 +1,7 @@
 package com.reservas.vehiculos.institucionales.model;
 
-
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 import java.util.List;
@@ -17,15 +17,18 @@ public class Vehiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "La placa es obligatoria")
+    @Column(unique = true, length = 10)
     private String placa;
 
+    @NotBlank(message = "La marca es obligatoria")
     private String marca;
 
+    @NotBlank(message = "El tipo es obligatorio")
     private String tipo;
 
     @OneToMany(mappedBy = "vehiculo")
     private List<Reparacion> reparaciones;
-
 
     @ManyToMany(mappedBy = "vehiculos")
     private List<Reserva> reservas;
