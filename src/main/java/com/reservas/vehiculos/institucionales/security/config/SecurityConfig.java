@@ -47,28 +47,21 @@ public class SecurityConfig {
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                                // *** Mover estas reglas al principio para asegurar la precedencia ***
-                                .requestMatchers(
-                                        // Rutas de Swagger UI sin prefijo /api
-                                        "/swagger-ui/**",
-                                        "/v3/api-docs/**",
-                                        "/swagger-resources/**",
-                                        "/webjars/**",
-                                        // Rutas de Swagger UI CON prefijo /api (ya que el error lo sugiere)
-                                        "/api/swagger-ui/**",
-                                        "/api/v3/api-docs/**",
-                                        "/api/swagger-resources/**",
-                                        "/api/webjars/**"
-                                ).permitAll()
-                                // Rutas para autenticación/registro (mantenerlas también permitidas)
-                                .requestMatchers("/api/auth/**").permitAll()
-                                // La regla general para /api/ (ahora evaluada después de las específicas)
-                                .requestMatchers("/api/**").permitAll() // Esta regla es muy amplia, considera refinarla
-//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/api/docentes/**").hasAnyRole("ADMIN", "DOCENTE")
-//                        .requestMatchers("/api/estudiantes/**").hasAnyRole("ADMIN", "DOCENTE", "ESTUDIANTE")
-//                        .requestMatchers("/api/evaluaciones-docente").hasRole("ADMIN")
-                                .anyRequest().authenticated()
+                        // Rutas públicas
+                        .requestMatchers(
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/swagger-resources/**",
+                                "/webjars/**",
+                                "/api/swagger-ui/**",
+                                "/api/v3/api-docs/**",
+                                "/api/swagger-resources/**",
+                                "/api/webjars/**"
+                        ).permitAll()
+                        // Rutas de autenticación
+                        .requestMatchers("/api/auth/**").permitAll()
+                        // Todas las demás rutas requieren autenticación
+                        .anyRequest().authenticated()
                 );
 
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

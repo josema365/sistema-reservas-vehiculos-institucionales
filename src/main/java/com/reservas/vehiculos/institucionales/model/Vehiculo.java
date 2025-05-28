@@ -1,5 +1,6 @@
 package com.reservas.vehiculos.institucionales.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -27,6 +28,7 @@ public class Vehiculo {
     @NotBlank(message = "El tipo es obligatorio")
     private String tipo;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "vehiculo")
     private List<Reparacion> reparaciones;
 
