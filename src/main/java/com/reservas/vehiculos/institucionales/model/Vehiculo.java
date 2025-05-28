@@ -28,6 +28,7 @@ public class Vehiculo {
     @NotBlank(message = "El tipo es obligatorio")
     private String tipo;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "vehiculo")
     @JsonManagedReference
     private List<Reparacion> reparaciones;
