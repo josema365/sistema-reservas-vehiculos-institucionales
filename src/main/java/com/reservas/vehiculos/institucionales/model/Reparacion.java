@@ -1,5 +1,6 @@
 package com.reservas.vehiculos.institucionales.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,7 @@ public class Reparacion {
     private LocalDateTime fechaReparacion;
 
     @ManyToOne
-    @JoinColumn(name = "id_auto")
+    @JsonBackReference
+    @JoinColumn(name = "vehiculo_id")
     private Vehiculo vehiculo;
 }

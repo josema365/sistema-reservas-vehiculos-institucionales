@@ -1,5 +1,6 @@
 package com.reservas.vehiculos.institucionales.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -30,6 +31,7 @@ public class Reserva {
     private LocalDateTime fechaReserva;
 
     @ManyToMany
+    @JsonBackReference
     @JoinTable(
             name = "reserva_vehiculo",
             joinColumns = @JoinColumn(name = "reserva_id"),
@@ -38,6 +40,7 @@ public class Reserva {
     private List<Vehiculo> vehiculos;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 }

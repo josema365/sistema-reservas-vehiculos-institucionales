@@ -1,5 +1,6 @@
 package com.reservas.vehiculos.institucionales.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -28,8 +29,10 @@ public class Vehiculo {
     private String tipo;
 
     @OneToMany(mappedBy = "vehiculo")
+    @JsonManagedReference
     private List<Reparacion> reparaciones;
 
     @ManyToMany(mappedBy = "vehiculos")
+    @JsonManagedReference
     private List<Reserva> reservas;
 }

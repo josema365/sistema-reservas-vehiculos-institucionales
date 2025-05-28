@@ -1,5 +1,6 @@
 package com.reservas.vehiculos.institucionales.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -44,6 +45,7 @@ public class Usuario {
     private LocalDateTime fechaRegistro;
 
     @OneToMany(mappedBy = "usuario")
+    @JsonManagedReference
     private List<Reserva> reservas;
 
     @ManyToMany(fetch = FetchType.EAGER)
