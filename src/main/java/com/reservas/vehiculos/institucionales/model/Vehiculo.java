@@ -30,7 +30,6 @@ public class Vehiculo {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "vehiculo")
-    @JsonManagedReference
     private List<Reparacion> reparaciones;
 
     @ManyToMany(mappedBy = "vehiculos")

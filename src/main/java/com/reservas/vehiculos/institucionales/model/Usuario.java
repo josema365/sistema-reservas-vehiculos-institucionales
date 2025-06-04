@@ -34,8 +34,8 @@ public class Usuario {
 
     private String email;
 
-    @Column(name = "cargo_publico")
-    private String cargoPublico;
+    @Column(name = "cargo_institucional")
+    private String cargoInstitucional;
 
     private String usuario;
 
@@ -43,6 +43,21 @@ public class Usuario {
 
     @Column(name = "fecha_registro")
     private LocalDateTime fechaRegistro;
+
+    @Column(name = "fecha_ultima_modificacion")
+    private LocalDateTime fechaUltimaModificacion;
+
+
+    @Column(name = "estado_cuenta")
+    private Boolean estadoCuenta;
+
+
+    private String ciudad;
+
+    private String genero;
+
+    @Column(name = "url_img")
+    private String urlImg;
 
     @OneToMany(mappedBy = "usuario")
     @JsonManagedReference

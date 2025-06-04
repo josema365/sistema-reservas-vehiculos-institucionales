@@ -56,7 +56,8 @@ public class SecurityConfig {
                                 "/api/swagger-ui/**",
                                 "/api/v3/api-docs/**",
                                 "/api/swagger-resources/**",
-                                "/api/webjars/**"
+                                "/api/webjars/**",
+                                "/api/usuarios/**"
                         ).permitAll()
                         // Rutas de autenticación
                         .requestMatchers("/api/auth/**").permitAll()

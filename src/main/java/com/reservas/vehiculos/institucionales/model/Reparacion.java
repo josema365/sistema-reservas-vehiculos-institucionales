@@ -30,7 +30,6 @@ public class Reparacion {
 
     @JsonBackReference
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "vehiculo_id")
     private Vehiculo vehiculo;
 }
