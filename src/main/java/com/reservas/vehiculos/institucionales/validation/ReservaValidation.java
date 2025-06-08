@@ -1,6 +1,7 @@
 package com.reservas.vehiculos.institucionales.validation;
 
 import com.reservas.vehiculos.institucionales.dto.ReservaDTO;
+import com.reservas.vehiculos.institucionales.model.EstadoReserva;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -41,14 +42,14 @@ public class ReservaValidation implements Validator {
         if (reservaDTO.getEstado() != null) {
             LocalDateTime now = LocalDateTime.now();
             
-            if (reservaDTO.getEstado() == EstadoReserva.EN_USO) {
+            if (reservaDTO.getEstado().equalsIgnoreCase(EstadoReserva.EN_USO.name())) {
                 if (reservaDTO.getFechaInicio() == null || reservaDTO.getFechaInicio().isAfter(now)) {
                     errors.rejectValue("estado", "error.estado", 
                             "No se puede establecer el estado EN_USO para una reserva futura");
                 }
             }
             
-            if (reservaDTO.getEstado() == EstadoReserva.FINALIZADO) {
+            if (reservaDTO.getEstado().equalsIgnoreCase(EstadoReserva.FINALIZADO.name())) {
                 if (reservaDTO.getFechaFin() == null || reservaDTO.getFechaFin().isAfter(now)) {
                     errors.rejectValue("estado", "error.estado", 
                             "No se puede finalizar una reserva que aún no ha terminado");

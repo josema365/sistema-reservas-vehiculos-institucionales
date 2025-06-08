@@ -1,5 +1,5 @@
 package com.reservas.vehiculos.institucionales.controller;
-
+import com.reservas.vehiculos.institucionales.model.EstadoReserva;
 import com.reservas.vehiculos.institucionales.dto.ReservaDTO;
 import com.reservas.vehiculos.institucionales.service.ReservaService;
 import com.reservas.vehiculos.institucionales.validation.ReservaValidation;
@@ -161,18 +161,25 @@ public class ReservaController {
     @CacheEvict(value = "reservas", allEntries = true)
     public ResponseEntity<?> updateReservaEstado(
             @PathVariable Long id,
-            @RequestParam EstadoReserva estado) {
+            @RequestParam("estado") String estado) {
         
         Optional<ReservaDTO> existingReserva = reservaService.findById(id);
         if (existingReserva.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
 
-        ReservaDTO reservaDTO = existingReserva.get();
-        reservaDTO.setEstado(estado);
-        
-        ReservaDTO updatedReserva = reservaService.update(id, reservaDTO);
-        return ResponseEntity.ok(updatedReserva);
+        try {
+            EstadoReserva estadoReserva = EstadoReserva.valueOf(estado.toUpperCase());
+            ReservaDTO reservaDTO = existingReserva.get();
+            reservaDTO.setEstado(estadoReserva.name());
+            
+            ReservaDTO updatedReserva = reservaService.update(id, reservaDTO);
+            return ResponseEntity.ok(updatedReserva);
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("estado", "Estado inválido. Los valores permitidos son: RESERVADO, EN_USO, FINALIZADO");
+            return ResponseEntity.badRequest().body(error);
+        }
     }
 
     private Map<String, String> formatErrors(BindingResult result) {
