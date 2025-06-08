@@ -77,6 +77,7 @@ public class ReservaServiceImpl implements ReservaService {
     public ReservaDTO save(ReservaDTO reservaDTO) {
         Reserva reserva = convertToEntity(reservaDTO);
         reserva.setFechaReserva(LocalDateTime.now());
+        reserva.setEstado(EstadoReserva.RESERVADO);
         reserva = reservaRepository.save(reserva);
         return convertToDTO(reserva);
     }
@@ -89,26 +90,22 @@ public class ReservaServiceImpl implements ReservaService {
             Reserva reserva = reservaOptional.get();
 
             LocalDateTime fechaReservaOriginal = reserva.getFechaReserva();
-
+            EstadoReserva estadoOriginal = reserva.getEstado();
 
             reserva.setDescripcion(reservaDTO.getDescripcion());
-
             reserva.setFechaInicio(reservaDTO.getFechaInicio());
-
             reserva.setFechaFin(reservaDTO.getFechaFin());
-
+            reserva.setEstado(reservaDTO.getEstado() != null ? reservaDTO.getEstado() : estadoOriginal);
 
             if (reservaDTO.getUsuarioId() != null) {
                 usuarioRepository.findById(reservaDTO.getUsuarioId())
                         .ifPresent(reserva::setUsuario);
             }
 
-
             if (reservaDTO.getVehiculoIds() != null && !reservaDTO.getVehiculoIds().isEmpty()) {
                 List<Vehiculo> vehiculos = vehiculoRepository.findAllById(reservaDTO.getVehiculoIds());
                 reserva.setVehiculos(vehiculos);
             }
-
 
             reserva.setFechaReserva(fechaReservaOriginal);
 
@@ -147,14 +144,12 @@ public class ReservaServiceImpl implements ReservaService {
         return ReservaDTO.builder()
                 .id(reserva.getId())
                 .descripcion(reserva.getDescripcion())
-
                 .fechaInicio(reserva.getFechaInicio())
-
                 .fechaFin(reserva.getFechaFin())
-
                 .fechaReserva(reserva.getFechaReserva())
                 .usuarioId(reserva.getUsuario() != null ? reserva.getUsuario().getId() : null)
                 .vehiculoIds(vehiculoIds)
+                .estado(reserva.getEstado())
                 .build();
     }
 
@@ -162,19 +157,15 @@ public class ReservaServiceImpl implements ReservaService {
         Reserva reserva = new Reserva();
         reserva.setId(reservaDTO.getId());
         reserva.setDescripcion(reservaDTO.getDescripcion());
-
         reserva.setFechaInicio(reservaDTO.getFechaInicio());
-
         reserva.setFechaFin(reservaDTO.getFechaFin());
-
         reserva.setFechaReserva(reservaDTO.getFechaReserva());
-
+        reserva.setEstado(reservaDTO.getEstado() != null ? reservaDTO.getEstado() : EstadoReserva.RESERVADO);
 
         if (reservaDTO.getUsuarioId() != null) {
             usuarioRepository.findById(reservaDTO.getUsuarioId())
                     .ifPresent(reserva::setUsuario);
         }
-
 
         if (reservaDTO.getVehiculoIds() != null && !reservaDTO.getVehiculoIds().isEmpty()) {
             List<Vehiculo> vehiculos = vehiculoRepository.findAllById(reservaDTO.getVehiculoIds());

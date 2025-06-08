@@ -20,6 +20,9 @@ public class Reserva {
 
     private String descripcion;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado")
+    private EstadoReserva estado;
 
     @Column(name = "fecha_inicio")
     private LocalDateTime fechaInicio;
